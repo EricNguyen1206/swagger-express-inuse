@@ -1,0 +1,99 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Todo API",
+    "version": "1.0.0",
+    "description": "A simple Todo API with Swagger documentation"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Todo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Auto-generated ID"
+          },
+          "title": {
+            "type": "string",
+            "description": "Todo title"
+          },
+          "completed": {
+            "type": "boolean",
+            "description": "Task completion status"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/todos": {
+      "get": {
+        "summary": "Retrieve all todos",
+        "tags": [
+          "Todos"
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of todos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Todo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new todo",
+        "tags": [
+          "Todos"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Learn Express"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The created todo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Todo"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Todos",
+      "description": "API for managing todos"
+    }
+  ]
+}
