@@ -1,17 +1,25 @@
 import express from "express";
-import { setupSwagger } from "./config/swagger";
+import cors from "cors";
+import dotenv from "dotenv";
 import todoRoutes from "./routes/todoRoutes";
+import { setupSwagger } from "./config/swagger";
+
+dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+
+// ✅ Enable CORS
+app.use(cors());
+
 app.use(express.json());
 
-// Setup Swagger documentation
+// ✅ Setup Swagger
 setupSwagger(app);
 
-// API routes
+// ✅ Use Routes
 app.use("/api/todos", todoRoutes);
 
-const PORT = 3001;
-app.listen(PORT, () =>
-  console.log(`🚀 Server running on http://localhost:${PORT}`)
-);
+app.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
+});

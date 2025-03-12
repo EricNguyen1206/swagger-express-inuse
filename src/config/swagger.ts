@@ -1,62 +1,34 @@
-import express, { Express, Request, Response } from "express";
-import path from "path";
-import fs from "fs";
 import swaggerJsdoc from "swagger-jsdoc";
-import { getAbsoluteFSPath } from "swagger-ui-dist";
+import swaggerUi from "swagger-ui-express";
+import { Express } from "express";
 
+const PORT = process.env.PORT ?? 3000;
+
+// Swagger options
 const options: swaggerJsdoc.Options = {
   definition: {
     openapi: "3.0.0",
-    info: {
-      title: "Todo API",
-      version: "1.0.0",
-      description: "A simple Todo API with Swagger documentation",
-    },
-    servers: [{ url: "http://localhost:3000" }],
+    info: { title: "To-Do API", version: "1.0.0" },
+    servers: [{ url: `http://localhost:${PORT}` }],
     components: {
       schemas: {
         Todo: {
           type: "object",
+          required: ["title"],
           properties: {
-            id: { type: "integer", description: "Auto-generated ID" },
-            title: { type: "string", description: "Todo title" },
-            completed: {
-              type: "boolean",
-              description: "Task completion status",
-            },
+            id: { type: "integer", example: 1 },
+            title: { type: "string", example: "Buy groceries" },
+            completed: { type: "boolean", example: false },
           },
         },
       },
     },
   },
-  apis: [path.join(__dirname, "../routes/*.ts")], // Extract docs from route files
+  apis: ["./src/routes/*.ts", "./src/controllers/*.ts"],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
 
-// Save Swagger JSON file to docs folder
-const docsPath = path.join(__dirname, "../../docs/swagger.json");
-fs.mkdirSync(path.dirname(docsPath), { recursive: true });
-fs.writeFileSync(docsPath, JSON.stringify(swaggerSpec, null, 2));
-
-export const setupSwagger = (app: Express): void => {
-  const swaggerUiPath = getAbsoluteFSPath();
-
-  // Serve static Swagger UI files
-  app.use("/api-docs", express.static(swaggerUiPath));
-
-  // Serve Swagger UI
-  app.get("/api-docs", (req: Request, res: Response) => {
-    res.sendFile(path.join(swaggerUiPath, "index.html"));
-  });
-
-  // Serve Swagger JSON spec
-  app.get("/swagger.json", (req: Request, res: Response) => {
-    res.json(swaggerSpec);
-  });
-};
-
-// Generate Swagger docs when running this file directly
-if (require.main === module) {
-  console.log("Generating Swagger documentation...");
+export function setupSwagger(app: Express) {
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 }
