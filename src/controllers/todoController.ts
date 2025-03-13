@@ -2,15 +2,6 @@ import { Request, Response } from "express";
 import { readTodos, writeTodos } from "../config/csvHelper";
 import { Todo } from "../todoModel";
 
-// Remove or replace this block
-/**
- * @swagger
- * components:
- *   schemas:
- *     Todo:
- *       $ref: "./todoModel.ts"
- */
-
 /**
  * @swagger
  * /api/todos:

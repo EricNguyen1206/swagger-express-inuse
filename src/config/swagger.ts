@@ -1,6 +1,6 @@
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import { Express } from "express";
+import { Express, Request, Response } from "express";
 
 const PORT = process.env.PORT ?? 3000;
 
@@ -10,25 +10,15 @@ const options: swaggerJsdoc.Options = {
     openapi: "3.0.0",
     info: { title: "To-Do API", version: "1.0.0" },
     servers: [{ url: `http://localhost:${PORT}` }],
-    components: {
-      schemas: {
-        Todo: {
-          type: "object",
-          required: ["title"],
-          properties: {
-            id: { type: "integer", example: 1 },
-            title: { type: "string", example: "Buy groceries" },
-            completed: { type: "boolean", example: false },
-          },
-        },
-      },
-    },
   },
-  apis: ["./src/routes/*.ts", "./src/controllers/*.ts"],
+  apis: ["./src/controllers/*.ts", "./src/todoModel.ts"],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
 
 export function setupSwagger(app: Express) {
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.get('/swagger.json', (req: Request, res: Response) => {
+    res.json(swaggerSpec);
+  });
 }
