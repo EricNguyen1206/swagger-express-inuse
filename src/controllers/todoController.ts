@@ -8,7 +8,7 @@ import { Todo } from "../todoModel";
  * components:
  *   schemas:
  *     Todo:
- *       $ref: "../todoModel.ts"
+ *       $ref: "./todoModel.ts"
  */
 
 /**
@@ -16,6 +16,8 @@ import { Todo } from "../todoModel";
  * /api/todos:
  *   get:
  *     summary: Get all todos
+ *     tags:
+ *       - Todos
  *     responses:
  *       200:
  *         description: List of todos
@@ -29,6 +31,11 @@ import { Todo } from "../todoModel";
  *         description: Internal Server Error
  *         content:
  *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
  *             example:
  *               message: "Internal Server Error"
  */
@@ -46,6 +53,8 @@ export async function getTodos(req: Request, res: Response) {
  * /api/todos:
  *   post:
  *     summary: Create a new todo
+ *     tags:
+ *       - Todos
  *     requestBody:
  *       required: true
  *       content:
@@ -121,6 +130,8 @@ export async function createTodo(req: Request, res: Response) {
  * /api/todos/{id}:
  *   get:
  *     summary: Get a single todo by ID
+ *     tags:
+ *       - Todos
  *     parameters:
  *       - name: id
  *         in: path
@@ -173,6 +184,8 @@ export async function getTodoById(req: Request, res: Response) {
  * /api/todos/{id}:
  *   put:
  *     summary: Update a todo
+ *     tags:
+ *       - Todos
  *     parameters:
  *       - name: id
  *         in: path
@@ -240,6 +253,8 @@ export async function updateTodo(req: Request, res: Response) {
  * /api/todos/{id}:
  *   delete:
  *     summary: Delete a todo
+ *     tags:
+ *       - Todos
  *     parameters:
  *       - name: id
  *         in: path
